@@ -1,5 +1,5 @@
 import test from 'ava';
-import Graph from '../src/index';
+import Graph from './src/index';
 
 test('Node ID is greater than zero', t => {
   const graph = new Graph();
@@ -14,10 +14,19 @@ test('Node IDs are differents', t => {
   t.is(nodeA.id === nodeB.id, false);
 });
 
-test('Node configs works', t => {
+test('Nodes have config', t => {
   const graph = new Graph();
   const nodeA = graph.add({name: 'A'});
   t.is(nodeA.config.name, 'A');
+});
+
+test('Edges have configs', t => {
+  const graph = new Graph();
+  const nodeA = graph.add({name: 'A'});
+  const nodeB = graph.add({name: 'B'});
+  graph.connect(nodeA.id, nodeB.id, {speed: 10});
+  const conns = graph.getConnections(nodeA.id, nodeB.id);
+  t.is(conns[0].config.speed, 10);
 });
 
 test('Node connections works', t => {
@@ -58,6 +67,16 @@ test('Single Node disconnection works', t => {
   graph.connect(nodeA.id, nodeB.id, {speed: 10});
   graph.connect(nodeB.id, nodeA.id, {speed: 5});
   graph.disconnect(nodeA.id);
-  const conns = graph.getConnections(nodeA.id, nodeB.id);
-  t.is(conns.length, 0);
+  const connsA = graph.getConnections(nodeA.id);
+  const connsB = graph.getConnections(nodeB.id);
+  t.is(connsA.length, 0);
+  t.is(connsB.length, 0);
+});
+
+test('Graph can delete a node', t => {
+  const graph = new Graph();
+  const nodeA = graph.add({name: 'A'});
+  t.is(graph.nodes[nodeA.id], nodeA);
+  graph.remove(nodeA.id);
+  t.is(graph.nodes[nodeA.id], undefined);
 });

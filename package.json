@@ -4,9 +4,9 @@
   "description": "My graph library",
   "main": "index.js",
   "scripts": {
-    "test": "xo && ava",
+    "test": "xo && nyc ava",
     "build": "webpack",
-    "dist": "xo && ava && webpack"
+    "dist": "xo && nyc ava && webpack"
   },
   "repository": {
     "type": "git",
@@ -27,14 +27,17 @@
     "babel-core": "^6.18.2",
     "babel-loader": "^6.2.8",
     "babel-preset-latest": "^6.16.0",
+    "coveralls": "^2.11.15",
+    "nyc": "^10.0.0",
     "webpack": "^1.13.3",
     "xo": "^0.17.1"
   },
   "ava": {
-    "require": ["babel-register"],
-    "babel": "inherit",
+    "require": [
+      "babel-register"
+    ],
     "files": [
-      "test/*.js"
+      "tests.js"
     ]
   },
   "xo": {
