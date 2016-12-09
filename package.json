@@ -2,6 +2,8 @@
   "name": "graph.js",
   "version": "1.0.0",
   "description": "My graph library",
+  "author": "Blitz",
+  "license": "MIT",
   "main": "index.js",
   "scripts": {
     "test": "xo && nyc ava",
@@ -16,12 +18,13 @@
     "graph",
     "nodes"
   ],
-  "author": "Blitz",
-  "license": "MIT",
   "bugs": {
     "url": "https://github.com/BlitzBanana/graph.js/issues"
   },
   "homepage": "https://github.com/BlitzBanana/graph.js#readme",
+  "dependencies": {
+    "lazy.js": "^0.4.2"
+  },
   "devDependencies": {
     "ava": "^0.17.0",
     "babel-core": "^6.18.2",
@@ -43,8 +46,5 @@
   "xo": {
     "esnext": true,
     "space": 2
-  },
-  "dependencies": {
-    "lazy.js": "^0.4.2"
   }
 }
