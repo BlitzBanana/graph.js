@@ -1,52 +1,57 @@
 import _ from 'lazy.js';
 import Node from './node';
 import Edge from './edge';
+import Dictionary from './collections/dictionary';
 
-let ID = 0;
+let ID = -1;
 
 class Graph {
   constructor() {
-    this.nodes = {};
-    this.edges = [];
+    this.nodes = new Dictionary();
+    this.edges = new Dictionary();
   }
 
   add(config) {
     const id = ++ID;
-    this.nodes[id] = new Node(id, config);
-    return this.nodes[id];
+    const node = new Node(this, id, config);
+    this.nodes.add(id, node);
+    return node;
   }
 
-  remove(nodeId) {
-    delete this.nodes[nodeId];
-    this.disconnect(nodeId);
+  remove(node) {
+    this.disconnect(node);
+    this.nodes.remove(node.id);
   }
 
-  connect(originId, desinationId, config) {
-    const edge = new Edge(originId, desinationId, config);
-    this.edges.push(edge);
+  connect(origin, destination, config) {
+    const id = ++ID;
+    const edge = new Edge(this, id, origin, destination, config);
+    this.edges.add(id, edge);
     return edge;
   }
 
-  disconnect(originId, destinationId) {
-    if (originId > 0 && destinationId > 0) {
-      this.edges = _(this.edges)
-                    .filter(x => (x.from !== originId && x.to !== destinationId))
-                    .toArray();
-    } else if (originId > 0) {
-      this.edges = _(this.edges)
-                    .filter(x => !(x.from !== originId || x.to !== originId))
-                    .toArray();
+  disconnect(origin, destination) {
+    if (origin && destination) {
+      this.edges = new Dictionary(_(this.edges.values)
+                    .filter(x => !(x.from.id === origin.id && x.to.id === destination.id))
+                    .map(x => [x.id, x])
+                    .toObject());
+    } else if (origin) {
+      this.edges = new Dictionary(_(this.edges.values)
+                    .filter(x => !(x.from.id === origin.id || x.to.id === origin.id))
+                    .map(x => [x.id, x])
+                    .toObject());
     }
   }
 
-  getConnections(nodeIdA, nodeIdB) {
-    if (nodeIdA > 0 && nodeIdB > 0) {
-      return _(this.edges)
-                    .filter(x => ((x.from === nodeIdA && x.to === nodeIdB) || (x.from === nodeIdB && x.to === nodeIdA)))
+  getConnections(nodeA, nodeB) {
+    if (nodeA && nodeB) {
+      return _(this.edges.values)
+                    .filter(x => ((x.from.id === nodeA.id && x.to.id === nodeB.id) || (x.from.id === nodeB.id && x.to.id === nodeA.id)))
                     .toArray();
-    } else if (nodeIdA > 0) {
-      return _(this.edges)
-                    .filter(x => (x.from === nodeIdA || x.to === nodeIdA))
+    } else if (nodeA) {
+      return _(this.edges.values)
+                    .filter(x => (x.from.id === nodeA.id || x.to.id === nodeA.id))
                     .toArray();
     }
   }
