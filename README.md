@@ -7,7 +7,7 @@
 
 ## Getting Started
 
-Not published on NPM yet.
+Not published on NPM, I did this to test tools (ava, xo, nyc, travis, coveralls).
 
 ### Basic Example
 
